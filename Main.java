@@ -9,6 +9,16 @@ class Node {
     }
 }
 
+class Pair {
+    Node node;
+    int level;
+
+    Pair(Node node, int level) {
+        this.node = node;
+        this.level = level;
+    }
+}
+
 public class Main {
 
     public static int n;
@@ -28,28 +38,37 @@ public class Main {
     static void levelOrder(Node root) {
         if (root == null) return;
 
-        Queue<Node> queue = new LinkedList<>();
-        queue.offer(root);
+        Queue<Pair> queue = new LinkedList<>();
+        queue.offer(new Pair(root, 1));
+
+        int currLevel = 1;
 
         while (!queue.isEmpty()) {
-            Node current = queue.poll();
+            Pair p = queue.poll();
+            Node current = p.node;
+            int level = p.level;
+
+            if (level != currLevel) {
+                System.out.println();
+                currLevel = level;
+            }
 
             System.out.print(current.data + " ");
 
             if (current.left != null) {
-                queue.offer(current.left);
+                queue.offer(new Pair(current.left, level + 1));
             }
 
             if (current.right != null) {
-                queue.offer(current.right);
+                queue.offer(new Pair(current.right, level + 1));
             }
         }
+        System.out.println();
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // Creating a binary tree
         Node root = new Node(1);
         root.left = new Node(2);
         root.right = new Node(3);
@@ -58,15 +77,15 @@ public class Main {
         root.right.left = new Node(6);
         root.right.right = new Node(7);
 
-        // Level Order Traversal
-        System.out.print("Level Order Traversal: ");
+        System.out.println("Level Order Traversal:");
         levelOrder(root);
 
-        // Nth Level Traversal
-        System.out.print("\nEnter n: ");
+        System.out.print("Enter n: ");
         n = sc.nextInt();
 
         System.out.print("Nodes at level " + n + ": ");
         nthLevel(root, 1);
+
+        sc.close();
     }
 }
